@@ -1,0 +1,30 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-readonly
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods","services","services/proxy","services/status","nodes","nodes/status", "persismeclaims","persistentvolumeclaims/status","persistentvolumes","persistentvolumes/status","pods/exe/log","pods/portforward","pods/proxy","pods/status","podtemplates","replicationcontrollers","replintrollers/scale","replicationcontrollers/status"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+  
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-readonly
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: developer-readonly
+subjects:
+  -
+    kind: ServiceAccount
+    name: developer-readonly
+    namespace: default
